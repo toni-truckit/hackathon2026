@@ -51,21 +51,12 @@ final class ManageSiteSettings extends SettingsPage
                 FileUpload::make('favicon')
                     ->image()
                     ->disk('public')
+                    ->directory('settings')
                     ->imageEditor()
-                    ->imageCropAspectRatio('1:1')
-                    ->maxWidth('50')
                     ->openable()
-                    ->preserveFilenames()
                     ->previewable()
                     ->downloadable()
-                    ->imageResizeTargetWidth('50')
-                    ->imageResizeTargetHeight('50')
-                    ->imagePreviewHeight('250')
-                    ->deletable()
-                    ->rules([
-                        'dimensions:ratio=1:1',
-                        'dimensions:max_width=50,max_height=50',
-                    ]),
+                    ->deletable(),
                 FileUpload::make('og_image')
                     ->image()
                     ->disk('public')

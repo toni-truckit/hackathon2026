@@ -89,7 +89,7 @@ final class DatabaseSeeder extends Seeder
         $applySeo(
             $landingPage,
             'Moving something big? Just ask Claude. | Truckit',
-            'Get an instant Truckit price in Claude for Australian freight and removals. Free to get a price—book and pay safely on truckit.net.',
+            'Get an instant Truckit price in Claude for Australian freight and removals. Free to get a price. Book and pay on truckit.net.',
         );
 
         $aboutPage = StaticPage::query()->updateOrCreate([

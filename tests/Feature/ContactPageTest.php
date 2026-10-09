@@ -42,7 +42,7 @@ it('renders the contact page with email and contact schema', function (): void {
 });
 
 it('shows the contact link in header and footer navigation', function (): void {
-    $content = (string) $this->get(route('landing-page'))->getContent();
+    $content = (string) $this->get(route('faq.view'))->getContent();
 
     expect(mb_substr_count($content, 'href="'.route('contact.view').'"'))->toBeGreaterThanOrEqual(2);
 });
@@ -59,7 +59,7 @@ it('renders configured social profiles in the footer', function (): void {
     $social->facebook = 'https://facebook.com/example';
     $social->save();
 
-    $content = (string) $this->get(route('landing-page'))->getContent();
+    $content = (string) $this->get(route('contact.view'))->getContent();
 
     expect($content)->toContain('href="https://linkedin.com/company/example"')
         ->and($content)->toContain('href="https://facebook.com/example"')

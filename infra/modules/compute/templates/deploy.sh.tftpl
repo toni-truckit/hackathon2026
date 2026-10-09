@@ -1,0 +1,31 @@
+#!/bin/bash
+set -euo pipefail
+
+export AWS_REGION="${region}"
+export AWS_DEFAULT_REGION="${region}"
+
+APP_DIR="/opt/truckit-mcp"
+cd "$APP_DIR"
+
+IMAGE_TAG="$(aws ssm get-parameter \
+  --name "${image_tag_param}" \
+  --query Parameter.Value \
+  --output text \
+  --region "$AWS_REGION")"
+
+if [ "$IMAGE_TAG" = "placeholder" ]; then
+  docker compose -f docker-compose.ec2.yml down --remove-orphans || true
+  docker compose -f docker-compose.placeholder.yml up -d
+  exit 0
+fi
+
+aws ecr get-login-password --region "$AWS_REGION" \
+  | docker login --username AWS --password-stdin "${ecr_registry}"
+
+export ECR_IMAGE="${ecr_repo_url}:$IMAGE_TAG"
+
+python3 "$APP_DIR/render_env.py"
+
+docker compose -f docker-compose.placeholder.yml down --remove-orphans || true
+docker compose -f docker-compose.ec2.yml pull
+docker compose -f docker-compose.ec2.yml up -d --remove-orphans

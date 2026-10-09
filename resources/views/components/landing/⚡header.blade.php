@@ -24,7 +24,7 @@ new class extends Component
 <header class="sticky top-0 z-50 border-b border-white/6 bg-landing-canvas/80 backdrop-blur-md">
     <div class="landing-container flex h-16 items-center justify-between gap-4">
         <a href="{{ route('landing-page') }}" class="shrink-0 cursor-pointer" wire:navigate>
-            <img src="{{ asset('images/logo.svg') }}" alt="{{ $this->front()->footer_brand }}" width="42" height="42" class="h-9 w-9">
+            <img src="{{ asset('images/logo.svg') }}" alt="{{ $this->front()->footer_brand }}" width="191" height="30" class="h-10 w-auto">
         </a>
 
         <nav class="hidden items-center gap-1 md:flex" aria-label="On this page">

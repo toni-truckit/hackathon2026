@@ -7,21 +7,9 @@ use Livewire\Component;
 
 new class extends Component
 {
-    public ?string $copiedKey = null;
-
     public function front(): FrontSettings
     {
         return app(FrontSettings::class);
-    }
-
-    public function markCopied(string $key): void
-    {
-        $this->copiedKey = $key;
-    }
-
-    public function clearCopied(): void
-    {
-        $this->copiedKey = null;
     }
 };
 ?>
@@ -38,23 +26,13 @@ new class extends Component
                     <button
                         type="button"
                         class="landing-btn-ghost"
-                        wire:click='$js.copy(@js($prompt["text"]), @js((string) $index))'
+                        x-data="{ copied: false }"
+                        x-on:click="navigator.clipboard.writeText(@js($prompt['text'])); copied = true; setTimeout(() => copied = false, 2000)"
                     >
-                        {{ $copiedKey === (string) $index ? $this->front()->copied_label : $this->front()->copy_label }}
+                        <span x-text="copied ? @js($this->front()->copied_label) : @js($this->front()->copy_label)">{{ $this->front()->copy_label }}</span>
                     </button>
                 </li>
             @endforeach
         </ul>
     </div>
 </section>
-
-@script
-<script>
-    $wire.$js.copy = (text, key) => {
-        navigator.clipboard.writeText(text).then(() => {
-            $wire.markCopied(key)
-            setTimeout(() => $wire.clearCopied(), 2000)
-        })
-    }
-</script>
-@endscript

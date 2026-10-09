@@ -38,11 +38,10 @@ it('renders the claude landing above the fold', function (): void {
         ->and($content)->not->toContain('Contact us');
 });
 
-it('marks a sample prompt as copied', function (): void {
+it('copies a sample prompt with alpine', function (): void {
     Livewire::test('landing.try-asking')
-        ->call('markCopied', '0')
-        ->assertSet('copiedKey', '0')
-        ->assertSee('Copied');
+        ->assertSee('navigator.clipboard.writeText')
+        ->assertSee('Copy');
 });
 
 it('toggles a landing faq inside the island', function (): void {

@@ -7,8 +7,6 @@ use Livewire\Component;
 
 new class extends Component
 {
-    public bool $copied = false;
-
     public function placeholder(): string
     {
         return '<div id="setup" class="landing-section scroll-mt-20" aria-hidden="true"></div>';
@@ -19,15 +17,6 @@ new class extends Component
         return app(FrontSettings::class);
     }
 
-    public function markCopied(): void
-    {
-        $this->copied = true;
-    }
-
-    public function clearCopied(): void
-    {
-        $this->copied = false;
-    }
 };
 ?>
 
@@ -51,8 +40,11 @@ new class extends Component
                                 <button
                                     type="button"
                                     class="shrink-0 cursor-pointer rounded-md bg-white px-3.5 py-2 text-[13px] font-semibold text-landing-accent-brand"
-                                    wire:click='$js.copy(@js($this->front()->connector_url))'
-                                >{{ $copied ? $this->front()->copied_label : $this->front()->copy_label }}</button>
+                                    x-data="{ copied: false }"
+                                    x-on:click="navigator.clipboard.writeText(@js($this->front()->connector_url)); copied = true; setTimeout(() => copied = false, 2000)"
+                                >
+                                    <span x-text="copied ? @js($this->front()->copied_label) : @js($this->front()->copy_label)">{{ $this->front()->copy_label }}</span>
+                                </button>
                             </div>
                         @endif
                     </div>
@@ -61,14 +53,3 @@ new class extends Component
         </ol>
     </div>
 </section>
-
-@script
-<script>
-    $wire.$js.copy = (text) => {
-        navigator.clipboard.writeText(text).then(() => {
-            $wire.markCopied()
-            setTimeout(() => $wire.clearCopied(), 2000)
-        })
-    }
-</script>
-@endscript

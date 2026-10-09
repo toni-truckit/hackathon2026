@@ -6,18 +6,16 @@ use App\Enums\PageType;
 use App\Models\Faq;
 use App\Models\StaticPage;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-new class extends Component
+new #[Layout('layouts::landing')] class extends Component
 {
-    public Collection $faqs;
-
     public ?StaticPage $landingPage = null;
 
     public function mount(): void
     {
-        $this->faqs = Faq::query()->active()->ordered()->limit(6)->get();
-
         $this->landingPage = StaticPage::query()
             ->whereType(PageType::LandingPage)
             ->first();
@@ -25,6 +23,13 @@ new class extends Component
         if ($this->landingPage) {
             views($this->landingPage)->record();
         }
+    }
+
+    /** @return Collection<int, Faq> */
+    #[Computed]
+    public function faqs(): Collection
+    {
+        return Faq::query()->active()->ordered()->limit(5)->get();
     }
 
     /** @return array<string, mixed> */
@@ -47,7 +52,15 @@ new class extends Component
 ?>
 
 <div>
-    <x-section.hero-section/>
+    <livewire:landing.header />
+    <livewire:landing.hero />
+    <livewire:landing.how-it-works />
+    <livewire:landing.try-asking />
+    <livewire:landing.why-truckit lazy.bundle />
+    <livewire:landing.setup lazy.bundle />
+    <livewire:landing.faq lazy.bundle />
+    <livewire:landing.cta lazy.bundle />
+    <livewire:landing.footer lazy.bundle />
 </div>
 
 @push('seo')
@@ -56,7 +69,7 @@ new class extends Component
     @else
         {!! seo() !!}
     @endif
-    @if ($faqs->isNotEmpty())
+    @if ($this->faqs->isNotEmpty())
         <script type="application/ld+json">{!! json_encode($this->faqSchema(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     @endif
 @endpush

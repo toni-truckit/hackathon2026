@@ -87,8 +87,7 @@
         );
     }
 
-    /* unslop-ignore: Figma 366:1239 hero title gradient */
     .landing-hero-title {
-        @apply bg-linear-to-b from-white from-30% to-white/62 bg-clip-text text-transparent;
+        @apply bg-linear-to-b from-white from-30% to-white/62 bg-clip-text text-transparent; /* unslop-ignore: Figma 366:1239 */
     }
 }

@@ -32,3 +32,11 @@ bootstrap/ssr/*
 boost.json
 .agents/skills/*
 AGENTS.md
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+override.tf
+override.tf.json
+*.auto.tfvars

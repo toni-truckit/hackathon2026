@@ -1,0 +1,111 @@
+import json
+import pathlib
+import subprocess
+
+REGION = "${region}"
+APP_DIR = pathlib.Path("/opt/truckit-mcp")
+SECRETS_DIR = APP_DIR / "secrets"
+
+APP_KEY_ARN = "${app_key_secret_arn}"
+PASSPORT_PRIVATE_ARN = "${passport_private_secret_arn}"
+PASSPORT_PUBLIC_ARN = "${passport_public_secret_arn}"
+TRUCKIT_ARN = "${truckit_secret_arn}"
+ML_PRICING_ARN = "${ml_pricing_secret_arn}"
+LLM_ARN = "${llm_secret_arn}"
+DB_ARN = "${db_secret_arn}"
+REDIS_ARN = "${redis_secret_arn}"
+
+APP_URL_PARAM = "${app_url_param}"
+OAUTH_REDIRECTS_PARAM = "${oauth_redirects_param}"
+FEATURE_FLAGS_PARAM = "${feature_flags_param}"
+
+
+def aws_text(args):
+    raw = subprocess.check_output(
+        ["aws", *args, "--region", REGION, "--output", "text"],
+        text=True,
+    )
+    if raw.endswith("\n"):
+        raw = raw[:-1]
+    return raw
+
+
+def secret(arn):
+    return aws_text(
+        [
+            "secretsmanager",
+            "get-secret-value",
+            "--secret-id",
+            arn,
+            "--query",
+            "SecretString",
+        ]
+    )
+
+
+def param(name):
+    return aws_text(
+        ["ssm", "get-parameter", "--name", name, "--query", "Parameter.Value"]
+    )
+
+
+def quote(value):
+    escaped = (
+        str(value)
+        .replace("\\", "\\\\")
+        .replace('"', '\\"')
+        .replace("$", "\\$")
+        .replace("\n", "\\n")
+    )
+    return '"' + escaped + '"'
+
+
+def main():
+    SECRETS_DIR.mkdir(parents=True, exist_ok=True)
+    private_key = SECRETS_DIR / "oauth-private.key"
+    public_key = SECRETS_DIR / "oauth-public.key"
+    private_key.write_text(secret(PASSPORT_PRIVATE_ARN))
+    public_key.write_text(secret(PASSPORT_PUBLIC_ARN))
+    private_key.chmod(0o600)
+    public_key.chmod(0o600)
+
+    truckit = json.loads(secret(TRUCKIT_ARN))
+    ml = json.loads(secret(ML_PRICING_ARN))
+    db = json.loads(secret(DB_ARN))
+    redis = json.loads(secret(REDIS_ARN))
+
+    lines = {
+        "APP_ENV": "${env}",
+        "APP_KEY": secret(APP_KEY_ARN),
+        "APP_URL": param(APP_URL_PARAM),
+        "DB_CONNECTION": "mysql",
+        "DB_HOST": db["host"],
+        "DB_PORT": str(db["port"]),
+        "DB_DATABASE": db["dbname"],
+        "DB_USERNAME": db["username"],
+        "DB_PASSWORD": db["password"],
+        "REDIS_CLIENT": "phpredis",
+        "REDIS_HOST": redis["host"],
+        "REDIS_PORT": str(redis["port"]),
+        "REDIS_PASSWORD": redis["auth_token"],
+        "REDIS_SCHEME": "tls",
+        "TRUCKIT_API_BASE_URL": truckit["base_url"],
+        "TRUCKIT_API_CLIENT_ID": truckit["client_id"],
+        "TRUCKIT_API_CLIENT_SECRET": truckit["client_secret"],
+        "ML_PRICING_API_URL": ml["url"],
+        "ML_PRICING_API_KEY": ml["key"],
+        "LLM_API_KEY": secret(LLM_ARN),
+        "OAUTH_REDIRECT_URIS": param(OAUTH_REDIRECTS_PARAM),
+        "FEATURE_FLAGS": param(FEATURE_FLAGS_PARAM),
+        "PASSPORT_PRIVATE_KEY": "/run/secrets/oauth-private.key",
+        "PASSPORT_PUBLIC_KEY": "/run/secrets/oauth-public.key",
+    }
+
+    env_path = APP_DIR / ".env"
+    body = "\n".join(key + "=" + quote(value) for key, value in lines.items()) + "\n"
+    env_path.write_text(body)
+    env_path.chmod(0o600)
+
+
+if __name__ == "__main__":
+    main()

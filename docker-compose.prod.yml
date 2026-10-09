@@ -1,0 +1,17 @@
+# Prod-shaped run: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+
+services:
+    app:
+        build:
+            target: production
+        image: truckit-mcp-app:prod
+        environment:
+            APP_ENV: production
+            APP_DEBUG: false
+        volumes:
+            - ./storage:/var/www/storage
+            - ./bootstrap/cache:/var/www/bootstrap/cache
+
+    webserver:
+        ports:
+            - "${APP_PORT:-80}:80"

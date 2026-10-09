@@ -1,0 +1,14 @@
+# With truckit-for-business-api stack up:
+# docker compose -f docker-compose.yml -f docker-compose.external-db.yml up -d
+# Set DB_HOST, BUSINESS_API_DB_HOST, MONOLITH_DB_HOST to db2 (or your MySQL service name).
+
+services:
+    app:
+        networks:
+            - mcp-network
+            - business-api
+
+networks:
+    business-api:
+        external: true
+        name: ${BUSINESS_API_NETWORK:-truckit-for-business-api_app-network}

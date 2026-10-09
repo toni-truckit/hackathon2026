@@ -32,6 +32,24 @@ function fakePartner(string $quoteUrl, array|string $body = ['quote_total' => 77
     ]);
 }
 
+function quoteBody(array $override = []): array
+{
+    return array_replace([
+        'status' => 'success',
+        'total' => ['min' => 831.25, 'max' => 1004.22],
+        'reference' => 'AAAA1111-BBBB-2222',
+        'expires' => now()->addDay()->toIso8601String(),
+        'listings' => [[
+            'reference' => 'LLLL-1',
+            'collect' => '111 Eagle St, Brisbane City QLD 4000',
+            'deliver' => '138 Oxford St, Darlinghurst NSW 2010',
+            'listing_url' => 'https://www.truckit.net/api/frontend/partner/listing?reference=LLLL-1',
+            'price' => ['min' => 831.25, 'max' => 1004.22],
+            'items' => [['description' => '2019 Suzuki Jimny GLX Manual']],
+        ]],
+    ], $override);
+}
+
 function furnitureInput(array $override = []): array
 {
     return array_replace_recursive([
@@ -154,4 +172,16 @@ it('advertises exactly the three quote tools', function (): void {
     foreach ([GetFurnitureQuote::class => 'get_furniture_quote', GetCarQuote::class => 'get_car_quote', GetMotorcycleQuote::class => 'get_motorcycle_quote'] as $tool => $name) {
         TruckitServer::tool($tool, [])->assertName($name);
     }
+});
+
+it('saves the quote and returns a page link to share', function (): void {
+    fakePartner('partner.test/get-quote/furniture', quoteBody());
+
+    TruckitServer::tool(GetFurnitureQuote::class, furnitureInput())
+        ->assertOk()
+        ->assertSee(route('quote.show', ['reference' => 'AAAA1111-BBBB-2222']));
+
+    $this->get(route('quote.show', ['reference' => 'AAAA1111-BBBB-2222']))
+        ->assertOk()
+        ->assertSee('$831.25 to $1,004.22');
 });

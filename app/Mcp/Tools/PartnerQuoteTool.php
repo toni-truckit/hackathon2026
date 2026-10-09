@@ -6,6 +6,7 @@ namespace App\Mcp\Tools;
 
 use App\Services\Partner\PartnerQuoteClient;
 use App\Services\Partner\PartnerQuoteException;
+use App\Services\Partner\QuotePageStore;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Illuminate\JsonSchema\Types\Type;
 use Illuminate\Support\Str;
@@ -16,7 +17,10 @@ use Laravel\Mcp\Server\Tool;
 
 abstract class PartnerQuoteTool extends Tool
 {
-    public function __construct(private readonly PartnerQuoteClient $partner) {}
+    public function __construct(
+        private readonly PartnerQuoteClient $partner,
+        private readonly QuotePageStore $quotePages,
+    ) {}
 
     /** furniture, cars or motorcycles: the last part of the partner URL */
     abstract protected function category(): string;
@@ -55,6 +59,12 @@ abstract class PartnerQuoteTool extends Tool
             return Response::error('Truckit could not price this quote: '.($quote['message'] ?? $quote['status']));
         }
 
+        $quotePageUrl = $this->quotePages->remember($quote);
+
+        if ($quotePageUrl !== null) {
+            $quote['quote_page_url'] = $quotePageUrl;
+        }
+
         $count = count($payload['items']);
         $summary = sprintf(
             'Truckit quote for %d %s (reference %s). The full partner response follows.',
@@ -62,6 +72,10 @@ abstract class PartnerQuoteTool extends Tool
             Str::plural('item', $count),
             $payload['reference'],
         );
+
+        if ($quotePageUrl !== null) {
+            $summary .= ' Quote page to share with the customer: '.$quotePageUrl;
+        }
 
         return Response::make([
             Response::text($summary),

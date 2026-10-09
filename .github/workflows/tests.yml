@@ -13,7 +13,7 @@ permissions:
 jobs:
   main:
     name: Pint, Rector & Test with coverage
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
@@ -53,7 +53,7 @@ jobs:
 
       - name: "Run Pint"
         run: |
-          ./vendor/bin/pint --config=pint.json --test --verbose --dirty
+          ./vendor/bin/pint --config=pint.json --test --verbose
 
       - name: "Run Tests"
         run: |

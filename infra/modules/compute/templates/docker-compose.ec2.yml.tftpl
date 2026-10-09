@@ -1,0 +1,17 @@
+services:
+  app:
+    image: $${ECR_IMAGE}
+    env_file:
+      - .env
+    ports:
+      - "80:80"
+    volumes:
+      - ./secrets:/run/secrets:ro
+    restart: unless-stopped
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ${region}
+        awslogs-group: ${log_group_app}
+        awslogs-stream: app
+        awslogs-create-group: "true"

@@ -36,6 +36,7 @@ AGENTS.md
 *.tfstate
 *.tfstate.*
 *.tfplan
+tfplan
 crash.log
 override.tf
 override.tf.json

@@ -30,6 +30,7 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use UnitEnum;
 
 final class StaticPageResource extends Resource
 {
@@ -39,47 +40,56 @@ final class StaticPageResource extends Resource
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::OutlinedDocumentDuplicate;
 
+    protected static string|UnitEnum|null $navigationGroup = 'Content';
+
+    protected static ?int $navigationSort = 1;
+
     protected static ?string $recordTitleAttribute = 'title';
 
     public static function form(Schema $schema): Schema
     {
         return $schema
-            ->columns(1)
             ->components([
-                TextInput::make('title')
-                    ->required(),
-                Select::make('type')
-                    ->options(PageType::class)
-                    ->default(PageType::ContentPage)
-                    ->live()
-                    ->required(),
-                TextInput::make('name')
-                    ->visible(fn (Get $get): bool => in_array($get('type'), [PageType::IndexPage, PageType::PageWithForm]))
-                    ->columnSpanFull()
-                    ->label('Route Name'),
-                SpatieMediaLibraryFileUpload::make('cover')
-                    ->label('Cover Image')
-                    ->collection('cover')
-                    ->image()
-                    ->required()
-                    ->preserveFilenames()
-                    ->imageEditor()
-                    ->imageAspectRatio('4:3')
-                    ->automaticallyCropImagesToAspectRatio()
-                    ->openable()
-                    ->previewable()
-                    ->downloadable()
-                    ->deletable()
-                    ->rules([
-                        'required',
-                        'dimensions:ratio=4/3',
+                Section::make('Page')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('title')
+                            ->required(),
+                        Select::make('type')
+                            ->options(PageType::class)
+                            ->default(PageType::ContentPage)
+                            ->live()
+                            ->required(),
+                        TextInput::make('name')
+                            ->visible(fn (Get $get): bool => in_array($get('type'), [PageType::IndexPage, PageType::PageWithForm]))
+                            ->columnSpanFull()
+                            ->label('Route Name'),
+                        SpatieMediaLibraryFileUpload::make('cover')
+                            ->label('Cover Image')
+                            ->collection('cover')
+                            ->image()
+                            ->required()
+                            ->preserveFilenames()
+                            ->imageEditor()
+                            ->imageAspectRatio('4:3')
+                            ->automaticallyCropImagesToAspectRatio()
+                            ->openable()
+                            ->previewable()
+                            ->downloadable()
+                            ->deletable()
+                            ->columnSpanFull()
+                            ->rules([
+                                'required',
+                                'dimensions:ratio=4/3',
+                            ]),
+                        TagsInput::make('tags')
+                            ->columnSpanFull(),
+                        Textarea::make('description')
+                            ->columnSpanFull(),
+                        RichEditor::make('content')
+                            ->visible(fn (Get $get): bool => $get('type') === PageType::ContentPage)
+                            ->columnSpanFull(),
                     ]),
-                TagsInput::make('tags')
-                    ->columnSpanFull(),
-                Textarea::make('description')
-                    ->columnSpanFull(),
-                RichEditor::make('content')
-                    ->visible(fn (Get $get): bool => $get('type') === PageType::ContentPage),
             ]);
     }
 

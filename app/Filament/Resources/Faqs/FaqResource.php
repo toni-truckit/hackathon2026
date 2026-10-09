@@ -17,6 +17,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
@@ -36,22 +37,29 @@ class FaqResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Content';
 
+    protected static ?int $navigationSort = 2;
+
     public static function form(Schema $schema): Schema
     {
         return $schema
-            ->columns(1)
             ->components([
-                TextInput::make('question')
-                    ->required()
-                    ->maxLength(255),
-                Textarea::make('answer')
-                    ->required()
-                    ->rows(5),
-                Toggle::make('is_active')
-                    ->default(true),
-                TextInput::make('sort_order')
-                    ->numeric()
-                    ->default(0),
+                Section::make('Question')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('question')
+                            ->required()
+                            ->maxLength(255)
+                            ->columnSpanFull(),
+                        Textarea::make('answer')
+                            ->required()
+                            ->rows(5)
+                            ->columnSpanFull(),
+                        Toggle::make('is_active')
+                            ->default(true),
+                        TextInput::make('sort_order')
+                            ->numeric()
+                            ->default(0),
+                    ]),
             ]);
     }
 
@@ -77,6 +85,7 @@ class FaqResource extends Resource
         return $table
             ->recordTitleAttribute('question')
             ->defaultSort('sort_order')
+            ->reorderable('sort_order')
             ->columns([
                 TextColumn::make('question')
                     ->searchable()

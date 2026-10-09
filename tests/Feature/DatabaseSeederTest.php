@@ -37,7 +37,7 @@ it('refreshes static page descriptions with current copy', function (): void {
     $about = StaticPage::query()->where('slug', 'about-us')->firstOrFail();
 
     expect($about->description)->toBeString()->not->toBeEmpty()
-        ->and($about->content)->toContain('TruckIt');
+        ->and($about->content)->toContain('Three steps');
 });
 
 it('seeds faq answers long enough for answer engines', function (): void {

@@ -10,7 +10,7 @@ return new class extends SettingsMigration
     {
         $this->migrator->update(
             'site.description',
-            fn (string $description): string => 'The TruckIt web surface for logistics partners—public pages, admin tooling, and MCP integrations tied to TruckIt freight data.',
+            fn (string $description): string => 'Get an instant Truckit price for your move, right in the chat. Then book it on Truckit in a few taps.',
         );
 
         $this->migrator->update('site.robots_txt', fn (string $robots): string => implode("\n", [

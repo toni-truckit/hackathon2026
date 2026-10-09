@@ -25,6 +25,20 @@
 
     --tw-format-links: var(--color-primary);
     --tw-format-invert-links: var(--color-primary-300);
+
+    --font-landing: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-landing-mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+
+    --color-landing-canvas: #08090a;
+    --color-landing-canvas-elevated: #0a0b0c;
+    --color-landing-surface: #0f1011;
+    --color-landing-surface-inset: #0c0d0e;
+    --color-landing-heading: #f7f8f8;
+    --color-landing-body: #e6e7e9;
+    --color-landing-muted: #8a8f98;
+    --color-landing-faint: #62666d;
+    --color-landing-accent-label: #ff7550;
+    --color-landing-accent-brand: #f05a28;
 }
 
 @layer components {
@@ -33,5 +47,48 @@
         @apply mx-auto;
         @apply max-w-7xl;
         @apply px-4 lg:px-0;
+    }
+
+    .landing-container {
+        @apply mx-auto w-full max-w-[1168px] px-6;
+    }
+
+    .landing-section {
+        @apply border-b border-white/6 py-16 md:py-24 lg:py-[120px];
+    }
+
+    .landing-label {
+        @apply text-[13px] font-semibold tracking-tight text-landing-accent-label;
+    }
+
+    .landing-h2 {
+        @apply text-[32px] font-semibold leading-tight tracking-[-0.03em] text-landing-heading md:text-[44px] md:leading-[1.08];
+    }
+
+    .landing-btn-primary {
+        @apply inline-flex cursor-pointer items-center justify-center rounded-[10px] bg-white px-5 py-3 text-[15px] font-semibold text-landing-accent-brand transition-colors duration-200 hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:outline-none;
+    }
+
+    .landing-btn-secondary {
+        @apply inline-flex cursor-pointer items-center justify-center rounded-[10px] border border-white/10 bg-white/5 px-5 py-3 text-[15px] font-semibold text-landing-heading transition-colors duration-200 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:outline-none;
+    }
+
+    .landing-btn-ghost {
+        @apply inline-flex cursor-pointer items-center justify-center rounded-lg border border-white/10 bg-white/6 px-3.5 py-2 text-[13px] font-semibold text-landing-body transition-colors duration-200 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:outline-none;
+    }
+}
+
+@layer utilities {
+    .landing-hero-glow {
+        background: radial-gradient(
+            ellipse 550px 320px at 50% 0%,
+            rgba(247, 147, 30, 0.16) 0%,
+            rgba(247, 147, 30, 0) 70%
+        );
+    }
+
+    /* unslop-ignore: Figma 366:1239 hero title gradient */
+    .landing-hero-title {
+        @apply bg-linear-to-b from-white from-30% to-white/62 bg-clip-text text-transparent;
     }
 }

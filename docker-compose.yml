@@ -1,6 +1,5 @@
-# Local: docker compose up -d --build
-# App: http://localhost:8080
-# Join business-api MySQL: set BUSINESS_API_NETWORK in .env (see README) and DB_* hosts to db2.
+# Local: docker compose up -d --build  →  http://localhost:8080
+# External MySQL: add -f docker-compose.external-db.yml
 
 services:
     app:
@@ -12,9 +11,9 @@ services:
         container_name: truckit-mcp-app
         restart: unless-stopped
         working_dir: /var/www
-        env_file:
-            - .env
+        # Laravel reads .env from the bind mount (do not load .env via compose env_file).
         environment:
+            DOCKER_BOOTSTRAP_DB: ${DOCKER_BOOTSTRAP_DB:-true}
             APP_URL: ${APP_URL:-http://localhost:8080}
             OG_IMAGE_NODE_BINARY: ${OG_IMAGE_NODE_BINARY:-/usr/bin/node}
             OG_IMAGE_CHROME_PATH: ${OG_IMAGE_CHROME_PATH:-/usr/bin/chromium}
@@ -22,8 +21,16 @@ services:
         volumes:
             - ./:/var/www
             - ./docker/php/local.ini:/usr/local/etc/php/conf.d/99-local.ini
+            - mcp-storage-framework:/var/www/storage/framework
+            - mcp-bootstrap-cache:/var/www/bootstrap/cache
         extra_hosts:
             - host.docker.internal:host-gateway
+        healthcheck:
+            test: ["CMD-SHELL", "php artisan inspire --quiet >/dev/null 2>&1"]
+            interval: 15s
+            timeout: 10s
+            retries: 5
+            start_period: 120s
         networks:
             - mcp-network
 
@@ -37,10 +44,15 @@ services:
             - ./:/var/www
             - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
         depends_on:
-            - app
+            app:
+                condition: service_healthy
         networks:
             - mcp-network
 
 networks:
     mcp-network:
         driver: bridge
+
+volumes:
+    mcp-storage-framework:
+    mcp-bootstrap-cache:

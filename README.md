@@ -116,13 +116,14 @@ Requires Docker Compose v2.
 ### Local (bind-mounted code)
 
 ```bash
-cp .env.example .env
-# Set APP_URL=http://localhost:8080
-
 docker compose up -d --build
 ```
 
-- Site: [http://localhost:8080](http://localhost:8080) (`APP_PORT` overrides host port)
+Open [http://localhost:8080](http://localhost:8080). Entrypoint copies `.env.example` → `.env` when missing, generates `APP_KEY`, runs `migrate --seed` when `DOCKER_BOOTSTRAP_DB=true` (default in compose), and keeps compiled views/cache in Docker volumes (`mcp-storage-framework`, `mcp-bootstrap-cache`) so host `php artisan` paths cannot break the container.
+
+Use `APP_URL=http://localhost:8080` in `.env` (default in `.env.example`). Change `APP_PORT` only if 8080 is taken.
+
+- Site: [http://localhost:8080](http://localhost:8080)
 - Migrate (once DB reachable): `docker compose exec app php artisan migrate --seed`
 - Optional one-shot migrate on boot: `RUN_MIGRATIONS=true` in `.env`
 

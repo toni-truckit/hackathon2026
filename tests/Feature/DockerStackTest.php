@@ -17,4 +17,11 @@ it('ships docker stack files', function (): void {
     foreach ($paths as $path) {
         expect(base_path($path))->toBeReadableFile();
     }
+
+    $compose = file_get_contents(base_path('docker-compose.yml'));
+
+    expect($compose)
+        ->toContain('mcp-storage-framework')
+        ->toContain('mcp-bootstrap-cache')
+        ->not->toMatch('/^\s+env_file:/m');
 });

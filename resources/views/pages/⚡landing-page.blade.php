@@ -51,7 +51,11 @@ new class extends Component
 </div>
 
 @push('seo')
-    {!! seo()->for($landingPage) !!}
+    @if ($landingPage)
+        {!! seo()->for($landingPage) !!}
+    @else
+        {!! seo() !!}
+    @endif
     @if ($faqs->isNotEmpty())
         <script type="application/ld+json">{!! json_encode($this->faqSchema(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     @endif

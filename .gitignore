@@ -32,12 +32,18 @@ bootstrap/ssr/*
 boost.json
 .agents/skills/*
 AGENTS.md
+
+# Terraform (local state/plans; use remote backend for state)
 .terraform/
 *.tfstate
 *.tfstate.*
+.terraform.tfstate.lock.info
 *.tfplan
 tfplan
 crash.log
+crash.*.log
 override.tf
 override.tf.json
+*_override.tf
+*_override.tf.json
 *.auto.tfvars

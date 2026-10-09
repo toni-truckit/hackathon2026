@@ -22,7 +22,12 @@ new class extends Component
         <ul class="mt-10 overflow-hidden rounded-[14px] border border-white/8">
             @foreach ($this->front()->prompts as $index => $prompt)
                 <li wire:key="prompt-{{ $index }}" class="flex items-center justify-between gap-4 border-b border-white/6 bg-landing-surface px-5 py-4 last:border-b-0">
-                    <p class="text-[15px] leading-snug text-landing-body">{{ $prompt['text'] }}</p>
+                    <p class="flex items-start gap-3 text-[15px] leading-snug text-landing-body">
+                        <svg class="mt-0.5 size-4 shrink-0 text-landing-muted" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                            <path d="M2.5 3.5h11v7h-4.2L5.5 13.2V10.5h-3v-7Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+                        </svg>
+                        <span>{{ $prompt['text'] }}</span>
+                    </p>
                     <button
                         type="button"
                         class="landing-btn-ghost"

@@ -14,8 +14,8 @@ new class extends Component
 };
 ?>
 
-<section id="top" class="relative scroll-mt-20 overflow-hidden border-b border-white/6">
-    <div class="landing-hero-glow pointer-events-none absolute inset-x-0 top-0 h-80" aria-hidden="true"></div>
+<section id="top" class="relative -mt-16 scroll-mt-20 border-b border-white/6 pt-16">
+    <div class="landing-hero-glow pointer-events-none absolute inset-x-0 -top-16 h-96" aria-hidden="true"></div>
 
     <div class="landing-container relative grid items-center gap-16 py-16 lg:grid-cols-2 lg:py-28">
         <div class="flex flex-col gap-4">
@@ -40,7 +40,9 @@ new class extends Component
             <p class="text-[13px] text-landing-faint">{{ $this->front()->hero_footnote }}</p>
         </div>
 
-        <div class="w-full rounded-2xl border border-white/10 bg-linear-to-b from-[#121314] to-landing-surface-inset p-px shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]">
+        <div class="flex w-full flex-col items-center">
+            <img src="{{ asset('images/claude-you-re-here.png') }}" alt="You're here!" width="219" height="32" class="mb-3 h-8 w-auto">
+            <div class="w-full rounded-2xl border border-white/10 bg-linear-to-b from-[#121314] to-landing-surface-inset p-px shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8),0_0_120px_-40px_rgba(247,147,30,0.35)]">
             <div class="flex items-center justify-between border-b border-white/6 px-4 py-3">
                 <div class="flex gap-1.5" aria-hidden="true">
                     <span class="size-2.5 rounded-[5px] bg-[#2a2b2e]"></span>
@@ -61,7 +63,12 @@ new class extends Component
                     </p>
                 </div>
 
-                <p class="font-landing-mono text-xs text-landing-faint">{{ $this->front()->chat_status }}</p>
+                <p class="flex items-center gap-2 font-landing-mono text-xs text-landing-faint">
+                    <svg class="size-3.5 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M3 8.2 6.2 11.4 13 4.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    {{ $this->front()->chat_status }}
+                </p>
 
                 <div class="rounded-xl border border-white/8 bg-white/2 p-4">
                     <p class="text-sm leading-relaxed text-[#b4bcd0]">
@@ -69,10 +76,14 @@ new class extends Component
                         <strong class="font-semibold text-white">{{ $this->front()->chat_price }}</strong>{{ $this->front()->chat_reply_after }}
                     </p>
                     <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
-                        <span class="inline-flex items-center gap-2 rounded-lg bg-white px-3.5 py-2 text-[13px] font-semibold text-[#1a0e00]">{{ $this->front()->chat_book_label }}</span>
+                        <span class="inline-flex items-center gap-2 rounded-lg bg-landing-accent-brand px-3.5 py-2 text-[13px] font-semibold text-white">
+                            {{ $this->front()->chat_book_label }}
+                            <span aria-hidden="true">↗</span>
+                        </span>
                         <span class="font-landing-mono text-[11px] text-landing-faint">{{ $this->front()->chat_domain }}</span>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>

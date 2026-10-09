@@ -37,4 +37,18 @@ return [
         ],
     ],
 
+    'truckit_partner' => [
+        // no default URL on purpose: point at the sandbox in .env, never prod by accident
+        'base_url' => env('TRUCKIT_PARTNER_BASE_URL'),
+        'auth_url' => env('TRUCKIT_PARTNER_AUTH_URL', 'https://auth-au.truckit.net/oauth2/token'),
+        'client_id' => env('TRUCKIT_PARTNER_CLIENT_ID'),
+        'client_secret' => env('TRUCKIT_PARTNER_CLIENT_SECRET'),
+        // x-customer-* headers on quote calls; these are not the OAuth client id/secret
+        'customer_id' => env('TRUCKIT_PARTNER_CUSTOMER_ID'),
+        'customer_secret' => env('TRUCKIT_PARTNER_CUSTOMER_SECRET', env('TRUCKIT_PARTNER_CLIENT_SECRET')),
+        'api_key' => env('TRUCKIT_PARTNER_API_KEY'),
+        'scope' => env('TRUCKIT_PARTNER_SCOPE', 'partner-api/get-quote'),
+        'timeout' => 20,
+    ],
+
 ];

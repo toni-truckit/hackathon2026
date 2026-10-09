@@ -12,6 +12,7 @@
     "require": {
         "php": "^8.3",
         "achyutn/filament-log-viewer": "^2.0",
+        "achyutn/laravel-helpers": "^0.9.7",
         "achyutn/laravel-seo": "^1.4",
         "awcodes/filament-gravatar": "^4.0",
         "cviebrock/eloquent-sluggable": "^13.0",
@@ -22,6 +23,7 @@
         "filament/spatie-laravel-settings-plugin": "^5.0",
         "joaopaulolndev/filament-edit-profile": "^3.0",
         "laravel/framework": "^13.0",
+        "laravel/mcp": "^1.0",
         "laravel/pulse": "^1.7",
         "laravel/tinker": "^3.0",
         "league/html-to-markdown": "^5.1",

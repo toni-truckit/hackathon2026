@@ -51,6 +51,10 @@ abstract class PartnerQuoteTool extends Tool
             return Response::error('Truckit could not price this quote: '.$e->getMessage());
         }
 
+        if (isset($quote['status']) && $quote['status'] !== 'success') {
+            return Response::error('Truckit could not price this quote: '.($quote['message'] ?? $quote['status']));
+        }
+
         $count = count($payload['items']);
         $summary = sprintf(
             'Truckit quote for %d %s (reference %s). The full partner response follows.',

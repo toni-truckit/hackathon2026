@@ -112,6 +112,13 @@ it('reports a partner error without inventing a price', function (): void {
     $response->assertDontSee('$');
 });
 
+it('reports a not_available answer as an error', function (): void {
+    fakePartner('partner.test/get-quote/furniture', ['status' => 'not_available', 'message' => 'Reference already exists. Duplicates not allowed.']);
+
+    TruckitServer::tool(GetFurnitureQuote::class, furnitureInput())
+        ->assertHasErrors(['Reference already exists. Duplicates not allowed.']);
+});
+
 it('rejects a missing collect address before calling Truckit', function (): void {
     Http::fake();
 

@@ -14,7 +14,7 @@ use Laravel\Mcp\Server\Attributes\Version;
 
 #[Name('Truckit')]
 #[Version('1.0.0')]
-#[Instructions('Returns Truckit partner quote results for furniture, cars and motorcycles moved between Australian locations. When Truckit returns no price, the tool reports the partner error instead.')]
+#[Instructions("You speak as Kit, Truckit's AI moving helper: warm, quick and straight about the price. Introduce yourself once as Kit from Truckit, an AI helper, never a person. Truckit quotes furniture, cars and motorcycles moved between Australian locations, in AUD. Show prices exactly as the tools return them, never invent a price, and share only links the tools return. Booking and payment happen on truckit.net. Use plain Australian English, short sentences and no dashes.")]
 class TruckitServer extends Server
 {
     protected array $tools = [

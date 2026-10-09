@@ -77,7 +77,7 @@ it('includes the faq page in the sitemap', function (): void {
     expect($content)->toContain(route('faq.view'));
 });
 
-it('emits faq schema on the homepage without rendering the faq section', function (): void {
+it('emits faq schema on the homepage without the old accordion', function (): void {
     $content = (string) $this->get(route('landing-page'))->getContent();
 
     expect($content)->toContain('"@type":"FAQPage"')
@@ -86,7 +86,7 @@ it('emits faq schema on the homepage without rendering the faq section', functio
 });
 
 it('labels the faq page as FAQ in the navigation', function (): void {
-    $content = (string) $this->get(route('landing-page'))->getContent();
+    $content = (string) $this->get(route('faq.view'))->getContent();
 
     expect($content)->toMatch('/>\s*FAQ\s*<\/a>/')
         ->and($content)->toMatch('/>\s*FAQ\s*<span/')

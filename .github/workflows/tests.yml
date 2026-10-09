@@ -49,7 +49,7 @@ jobs:
 
       - name: "Run Rector"
         run: |
-          ./vendor/bin/rector process --dry-run --config=rector.php
+          php vendor/bin/rector process --dry-run --config=rector.php
 
       - name: "Run Pint"
         run: |
@@ -57,4 +57,4 @@ jobs:
 
       - name: "Run Tests"
         run: |
-          ./vendor/bin/pest --colors=always --stop-on-failure --coverage --ci
+          php vendor/bin/pest --colors=always --stop-on-failure --coverage --ci

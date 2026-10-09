@@ -18,6 +18,8 @@ final class SettingsCluster extends Cluster
 
     protected static string|UnitEnum|null $navigationGroup = 'System';
 
+    protected static ?int $navigationSort = 1;
+
     public static function canAccess(): bool
     {
         return in_array(auth()->user()->role, [UserRole::Developer, UserRole::Admin]);

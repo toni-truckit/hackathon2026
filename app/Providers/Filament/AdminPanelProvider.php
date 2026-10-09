@@ -31,6 +31,7 @@ use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -82,6 +83,11 @@ final class AdminPanelProvider extends PanelProvider
             ->login()
             ->colors([
                 'primary' => Color::hex('#fc6a3e'),
+            ])
+            ->font('Inter')
+            ->navigationGroups([
+                NavigationGroup::make('Content'),
+                NavigationGroup::make('System'),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -146,6 +152,7 @@ final class AdminPanelProvider extends PanelProvider
             ->maxContentWidth(Width::Full)
             ->globalSearch(false)
             ->sidebarCollapsibleOnDesktop()
+            ->sidebarFullyCollapsibleOnDesktop()
             ->databaseTransactions()
             ->unsavedChangesAlerts()
             ->spa();
